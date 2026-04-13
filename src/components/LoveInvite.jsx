@@ -6,7 +6,7 @@ const LoveInvite = () => {
 
   // 💡 Stable countdown target
   const targetDate = useMemo(() => {
-    return new Date("2026-04-15T15:00:00").getTime();
+    return new Date("2026-04-15T12:00:00").getTime();
   }, []);
 
   const [timeLeft, setTimeLeft] = useState({});
