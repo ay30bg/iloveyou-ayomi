@@ -86,7 +86,7 @@ const LoveInvite = () => {
             <h1 className="title">Hey Jummy ❤️</h1>
 
             <p className="subtitle">
-              You're invited to our virtual dinner date
+              You're invited to our virtual date
             </p>
 
             <div className="countdown">
