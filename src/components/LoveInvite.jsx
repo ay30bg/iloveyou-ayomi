@@ -20,7 +20,7 @@ const LoveInvite = () => {
     "I planned something special for us... I can't wait to spend this moment with you ❤️";
 
   const surpriseMessage =
-    "I wish I could be right there with you right now... but until then, this moment is ours. I love you ❤️";
+  "6 months with you, and my heart is still choosing you every day ❤️ Thank you for being my happiness. I love you endlessly 💕";
 
   // ⏳ Countdown + Suspense Flow
   useEffect(() => {
