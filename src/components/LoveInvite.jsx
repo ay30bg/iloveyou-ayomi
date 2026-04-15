@@ -7,7 +7,7 @@ const LoveInvite = () => {
   const dateLink = "https://meet.google.com/yrc-jqsk-fka";
 
   const targetDate = useMemo(() => {
-    return new Date("2026-04-15T06:19:00").getTime();
+    return new Date("2026-04-16T14:00:00").getTime();
   }, []);
 
   const [timeLeft, setTimeLeft] = useState({});
