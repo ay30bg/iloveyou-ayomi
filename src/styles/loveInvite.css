@@ -329,8 +329,23 @@
    MOBILE
 ========================= */
 @media (max-width: 768px) {
+  .invite-container {
+    padding: 0 15px; /* 👈 adds left & right spacing */
+  }
+
   .invite-card {
-    width: 90%;
-    padding: 25px;
+    width: 100%;
+    max-width: 100%;
+    padding: 25px 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  .invite-container {
+    padding: 0 12px; /* 👈 slightly tighter for very small screens */
+  }
+
+  .invite-card {
+    padding: 22px 16px;
   }
 }
