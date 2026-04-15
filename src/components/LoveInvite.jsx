@@ -1,28 +1,39 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import "../styles/loveInvite.css";
+import confetti from "canvas-confetti";
 
 const LoveInvite = () => {
   const dateLink = "https://meet.google.com/yrc-jqsk-fka";
 
-  // 💡 Stable countdown target
+  // ⏳ Countdown target
   const targetDate = useMemo(() => {
-    return new Date("2026-04-14T23:16:00").getTime();
+    return new Date("2026-04-15T06:19:00").getTime();
   }, []);
 
   const [timeLeft, setTimeLeft] = useState({});
   const [phase, setPhase] = useState("countdown");
   const [text, setText] = useState("");
+  const [opened, setOpened] = useState(false);
 
-  // 🎵 AUDIO FIX
+  // 🎥 Gallery state
+  const [selectedVideo, setSelectedVideo] = useState(null);
+
+  const videos = [
+    "/videos/memories1.mp4",
+    "/videos/memories2.mp4",
+    "/videos/memories3.mp4",
+    "/videos/memories4.mp4",
+  ];
+
   const audioRef = useRef(null);
 
   const message =
     "I planned something special for us... I can't wait to spend this moment with you ❤️";
 
   const surpriseMessage =
-  "6 months with you, and my heart is still choosing you every day ❤️ Thank you for being my happiness. I love you endlessly 💕";
+    "6 months with you, and my heart is still choosing you every day ❤️ Thank you for being my happiness. I love you endlessly 💕";
 
-  // ⏳ Countdown + Suspense Flow
+  // ⏳ Countdown Logic
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -60,6 +71,37 @@ const LoveInvite = () => {
     return () => clearInterval(typing);
   }, []);
 
+  // 🎇 Confetti
+  useEffect(() => {
+    if (phase === "reveal") {
+      confetti({
+        particleCount: 160,
+        spread: 100,
+        origin: { y: 0.6 },
+      });
+    }
+  }, [phase]);
+
+  // 🎵 Audio Fade In
+  const fadeInAudio = () => {
+    let vol = 0;
+    const audio = audioRef.current;
+
+    if (!audio) return;
+
+    audio.volume = 0;
+    audio.play();
+
+    const fade = setInterval(() => {
+      if (vol < 0.6) {
+        vol += 0.05;
+        audio.volume = vol;
+      } else {
+        clearInterval(fade);
+      }
+    }, 200);
+  };
+
   return (
     <div
       className={`invite-container ${
@@ -74,8 +116,7 @@ const LoveInvite = () => {
       </div>
 
       <div className="invite-card">
-
-        {/* 🎵 AUDIO (controlled, hidden) */}
+        {/* 🎵 AUDIO */}
         <audio ref={audioRef} loop>
           <source src="/ekuro.mp3" type="audio/mpeg" />
         </audio>
@@ -84,7 +125,6 @@ const LoveInvite = () => {
         {phase === "countdown" && (
           <>
             <h1 className="title">Hey Jummy ❤️</h1>
-
             <p className="subtitle">
               You're invited to our virtual date
             </p>
@@ -98,16 +138,7 @@ const LoveInvite = () => {
 
             <p className="message">{text}</p>
 
-            {/* 🎵 MUSIC BUTTON (FIXED) */}
-            <button
-              className="music-btn"
-              onClick={() => {
-                if (audioRef.current) {
-                  audioRef.current.volume = 0.6;
-                  audioRef.current.play();
-                }
-              }}
-            >
+            <button className="music-btn" onClick={fadeInAudio}>
               🎵 Play Our Song
             </button>
           </>
@@ -130,22 +161,75 @@ const LoveInvite = () => {
           </div>
         )}
 
-        {/* ❤️ REVEAL */}
+        {/* ❤️ LETTER PHASE */}
         {phase === "reveal" && (
           <div className="surprise">
-            <h1 className="surprise-title">❤️ For You ❤️</h1>
+            {!opened ? (
+              <button
+                className="open-letter"
+                onClick={() => setOpened(true)}
+              >
+                💌 Open My Letter
+              </button>
+            ) : (
+              <div className="letter-view">
+                <h1 className="surprise-title">❤️ For You ❤️</h1>
 
-            <p className="surprise-text">{surpriseMessage}</p>
+                <p className="surprise-text">{surpriseMessage}</p>
 
-            <a href={dateLink} target="_blank" rel="noopener noreferrer">
-              <button className="join-btn">
+                <button
+                  className="next-btn"
+                  onClick={() => setPhase("gallery")}
+                >
+                  See Our Memories 🎬
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 🎬 GALLERY PHASE */}
+        {phase === "gallery" && (
+          <div className="gallery-screen">
+            <h1 className="gallery-main-title">
+              Our Memories 🎬
+            </h1>
+
+            <div className="video-gallery">
+              {videos.map((vid, index) => (
+                <div
+                  key={index}
+                  className="video-card"
+                  onClick={() => setSelectedVideo(vid)}
+                >
+                  <video src={vid} muted />
+                </div>
+              ))}
+            </div>
+
+            {/* 💕 JOIN BUTTON */}
+            <a
+              href={dateLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="join-btn big">
                 Join Our Date 💕
               </button>
             </a>
           </div>
         )}
-
       </div>
+
+      {/* 🎬 VIDEO MODAL */}
+      {selectedVideo && (
+        <div
+          className="video-modal"
+          onClick={() => setSelectedVideo(null)}
+        >
+          <video src={selectedVideo} controls autoPlay />
+        </div>
+      )}
     </div>
   );
 };
