@@ -1,8 +1,10 @@
 /* =========================
-   URBAN NIGHT INVITE UI
+   URBAN NIGHT INVITE UI (FULL UPDATED)
 ========================= */
 
-/* Background */
+/* =========================
+   BACKGROUND
+========================= */
 .invite-container {
   height: 100vh;
   display: flex;
@@ -15,7 +17,23 @@
   transition: all 1s ease;
 }
 
-/* subtle urban grid overlay */
+/* neon ambient glow */
+.invite-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(255,0,100,0.15), transparent),
+              radial-gradient(circle at 70% 80%, rgba(0,240,255,0.15), transparent);
+  animation: ambientGlow 6s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes ambientGlow {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}
+
+/* subtle grid */
 .invite-container::before {
   content: "";
   position: absolute;
@@ -24,69 +42,54 @@
                     linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 40px 40px;
   opacity: 0.25;
-  pointer-events: none;
 }
 
-/* Suspense mode (city blackout feel) */
+/* suspense mode */
 .invite-container.suspense-mode {
   background: radial-gradient(circle at center, #000, #050505);
-  filter: contrast(1.2);
+  filter: contrast(1.3) brightness(0.9);
 }
 
-/* Card */
+/* =========================
+   CARD
+========================= */
 .invite-card {
-  background: rgba(10, 10, 15, 0.75);
+  background: rgba(15, 15, 20, 0.6);
   border: 1px solid rgba(255, 0, 100, 0.25);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(12px);
   padding: 40px;
-  border-radius: 14px;
+  border-radius: 18px;
   text-align: center;
   width: 360px;
   color: #fff;
+  position: relative;
+  z-index: 2;
+
   box-shadow:
-    0 0 20px rgba(255, 0, 120, 0.15),
-    0 0 60px rgba(0, 255, 255, 0.05),
-    0 20px 80px rgba(0, 0, 0, 0.8);
+    0 0 25px rgba(255, 0, 120, 0.2),
+    0 0 80px rgba(0, 255, 255, 0.08),
+    inset 0 0 30px rgba(255,255,255,0.03);
+
   animation: fadeIn 1s ease;
 }
 
-/* Title neon urban */
+/* =========================
+   TEXT
+========================= */
 .title {
-  font-size: 28px;
+  font-size: 30px;
   color: #ff2d75;
   text-shadow:
-    0 0 8px rgba(255, 45, 117, 0.8),
-    0 0 20px rgba(255, 45, 117, 0.4);
-  letter-spacing: 1px;
+    0 0 10px rgba(255, 45, 117, 0.9),
+    0 0 30px rgba(255, 45, 117, 0.5);
 }
 
-/* subtitle muted */
 .subtitle {
   margin: 10px 0 20px;
-  opacity: 0.6;
+  opacity: 0.65;
   color: #cfcfcf;
 }
 
-/* Countdown (tech blocks style) */
-.countdown {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0;
-  gap: 10px;
-}
-
-.countdown span {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 0, 100, 0.15);
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: bold;
-  color: #fff;
-  box-shadow: inset 0 0 10px rgba(255, 0, 100, 0.05);
-}
-
-/* Message typing vibe */
 .message {
   margin: 20px 0;
   font-style: italic;
@@ -94,143 +97,227 @@
   min-height: 50px;
 }
 
-/* Buttons (neon street glow) */
+/* =========================
+   COUNTDOWN
+========================= */
+.countdown {
+  display: flex;
+  gap: 10px;
+}
+
+.countdown span {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,0,100,0.2);
+  font-weight: bold;
+
+  box-shadow:
+    inset 0 0 15px rgba(255, 0, 100, 0.08),
+    0 0 10px rgba(0,240,255,0.05);
+
+  transition: 0.3s;
+}
+
+.countdown span:hover {
+  transform: scale(1.08);
+}
+
+/* =========================
+   BUTTONS
+========================= */
 .join-btn,
 .music-btn {
   margin-top: 10px;
-  padding: 12px 20px;
+  padding: 12px 22px;
   border: none;
   border-radius: 30px;
   cursor: pointer;
+
   background: linear-gradient(90deg, #ff0055, #00f0ff);
   color: white;
   font-weight: bold;
-  letter-spacing: 1px;
+
   box-shadow:
     0 0 15px rgba(255, 0, 100, 0.4),
     0 0 25px rgba(0, 240, 255, 0.2);
-  transition: 0.3s ease;
+
+  transition: all 0.3s ease;
 }
 
 .join-btn:hover,
 .music-btn:hover {
-  transform: translateY(-2px) scale(1.05);
+  transform: translateY(-3px) scale(1.07);
+}
+
+/* OPEN LETTER */
+.open-letter {
+  margin-top: 20px;
+  padding: 14px 28px;
+  border-radius: 40px;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ff0055, #00f0ff);
+  color: white;
+
   box-shadow:
-    0 0 25px rgba(255, 0, 100, 0.6),
-    0 0 35px rgba(0, 240, 255, 0.4);
+    0 0 20px rgba(255, 0, 100, 0.5),
+    0 0 40px rgba(0, 240, 255, 0.2);
+
+  animation: pulseGlow 1.5s infinite;
 }
 
-/* Floating Hearts → now neon orbs */
-.hearts span {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: #ff0055;
-  border-radius: 50%;
-  box-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055;
-  animation: float 8s linear infinite;
-  bottom: -50px;
-  opacity: 0.8;
+@keyframes pulseGlow {
+  50% { transform: scale(1.08); }
 }
 
-.hearts span:nth-child(even) {
-  background: #00f0ff;
-  box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+/* NEXT BUTTON */
+.next-btn {
+  margin-top: 20px;
+  padding: 12px 20px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(90deg, #ff0055, #00f0ff);
+  color: white;
+
+  box-shadow:
+    0 0 15px rgba(255, 0, 120, 0.5),
+    0 0 25px rgba(0, 240, 255, 0.3);
 }
 
-/* float animation (faster urban drift) */
-@keyframes float {
-  0% {
-    transform: translateY(0) scale(0.6);
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-900px) translateX(30px) scale(1.2);
-    opacity: 0;
-  }
-}
-
-/* Suspense */
+/* =========================
+   SUSPENSE
+========================= */
 .suspense {
   height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
 }
 
-/* glitch-style text */
 .suspense-text {
   font-size: 28px;
-  color: #fff;
-  text-shadow:
-    2px 0 #ff0055,
-    -2px 0 #00f0ff;
-  animation: glitchFade 1.8s ease forwards;
+  text-shadow: 2px 0 #ff0055, -2px 0 #00f0ff;
 }
 
-@keyframes glitchFade {
-  0% { opacity: 0; transform: translateY(10px); }
-  50% { opacity: 0.6; transform: translateX(-2px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-/* heartbeat neon */
-.heartbeat {
-  margin-top: 20px;
-  width: 18px;
-  height: 18px;
-  background: #ff0055;
-  border-radius: 50%;
-  box-shadow: 0 0 15px #ff0055;
-  animation: beat 1s infinite;
-}
-
-@keyframes beat {
-  0%, 100% { transform: scale(1); }
-  25% { transform: scale(1.4); }
-  50% { transform: scale(1); }
-}
-
-/* surprise section */
-.surprise {
-  animation: fadeInScale 1s ease;
+/* =========================
+   LETTER
+========================= */
+.letter-view {
+  animation: fadeIn 0.6s ease;
 }
 
 .surprise-title {
   font-size: 26px;
   color: #00f0ff;
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
-  margin-bottom: 15px;
 }
 
 .surprise-text {
-  font-size: 15px;
-  line-height: 1.6;
   color: #ccc;
-  font-style: italic;
+  line-height: 1.6;
 }
 
-/* entry animation */
-@keyframes fadeInScale {
+/* =========================
+   GALLERY SCREEN
+========================= */
+.gallery-screen {
+  animation: galleryEnter 0.8s ease;
+}
+
+@keyframes galleryEnter {
   from {
     opacity: 0;
-    transform: scale(0.9);
+    transform: translateY(40px) scale(0.9);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0) scale(1);
   }
 }
 
-/* fade */
+.gallery-main-title {
+  color: #ff2d75;
+  margin-bottom: 15px;
+}
+
+/* VIDEO GRID */
+.video-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+/* VIDEO CARD */
+.video-card {
+  border-radius: 15px;
+  overflow: hidden;
+  cursor: pointer;
+  background: rgba(0,0,0,0.6);
+
+  border: 1px solid rgba(255,0,100,0.2);
+
+  box-shadow:
+    0 0 12px rgba(255, 0, 100, 0.25),
+    0 0 20px rgba(0, 240, 255, 0.1);
+
+  transition: 0.3s;
+}
+
+.video-card:hover {
+  transform: scale(1.08);
+}
+
+.video-card video {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+/* =========================
+   VIDEO MODAL
+========================= */
+.video-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.video-modal video {
+  width: 90%;
+  max-height: 80%;
+  border-radius: 18px;
+}
+
+/* =========================
+   FLOATING ORBS
+========================= */
+.hearts span {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: float 8s linear infinite;
+}
+
+@keyframes float {
+  from { transform: translateY(0); }
+  to { transform: translateY(-900px); }
+}
+
+/* =========================
+   ANIMATION
+========================= */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(25px);
   }
   to {
     opacity: 1;
@@ -239,20 +326,11 @@
 }
 
 /* =========================
-   SIMPLE MOBILE CARD FIX
+   MOBILE
 ========================= */
 @media (max-width: 768px) {
   .invite-card {
-    width: calc(100% - 40px); /* adds left + right spacing */
-    max-width: 320px;        /* keeps it small and centered */
-    padding: 26px 18px;
-  }
-}
-
-@media (max-width: 380px) {
-  .invite-card {
-    width: calc(100% - 32px);
-    max-width: 300px;
-    padding: 22px 16px;
+    width: 90%;
+    padding: 25px;
   }
 }
