@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import "../styles/loveInvite.css";
 import confetti from "canvas-confetti";
+import html2canvas from "html2canvas";
 
 const LoveInvite = () => {
   const dateLink = "https://meet.google.com/yrc-jqsk-fka";
 
-  // ⏳ Countdown target
   const targetDate = useMemo(() => {
     return new Date("2026-04-15T06:19:00").getTime();
   }, []);
@@ -15,8 +15,14 @@ const LoveInvite = () => {
   const [text, setText] = useState("");
   const [opened, setOpened] = useState(false);
 
-  // 🎥 Gallery state
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [sparkle, setSparkle] = useState(false);
+
+  // 🖋️ NEW: typed letter state
+  const [typedLetter, setTypedLetter] = useState("");
+
+  const audioRef = useRef(null);
+  const letterRef = useRef(null);
 
   const videos = [
     "/videos/memories1.mp4",
@@ -25,15 +31,13 @@ const LoveInvite = () => {
     "/videos/memories4.mp4",
   ];
 
-  const audioRef = useRef(null);
-
   const message =
     "I planned something special for us... I can't wait to spend this moment with you ❤️";
 
   const surpriseMessage =
-    "6 months with you, and my heart is still choosing you every day ❤️ Thank you for being my happiness. I love you endlessly 💕";
+    "6 - months with you, and my heart is still choosing you every day ❤️ Thank you for being my happiness. I love you endlessly 💕";
 
-  // ⏳ Countdown Logic
+  // ⏳ countdown
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -41,9 +45,7 @@ const LoveInvite = () => {
 
       if (distance <= 0) {
         clearInterval(interval);
-
         setPhase("wait");
-
         setTimeout(() => setPhase("tease"), 2500);
         setTimeout(() => setPhase("reveal"), 5000);
       } else {
@@ -59,7 +61,7 @@ const LoveInvite = () => {
     return () => clearInterval(interval);
   }, [targetDate]);
 
-  // ✍️ Typing Effect
+  // ✍️ intro typing
   useEffect(() => {
     let i = 0;
     const typing = setInterval(() => {
@@ -71,7 +73,7 @@ const LoveInvite = () => {
     return () => clearInterval(typing);
   }, []);
 
-  // 🎇 Confetti
+  // 🎇 confetti
   useEffect(() => {
     if (phase === "reveal") {
       confetti({
@@ -82,7 +84,7 @@ const LoveInvite = () => {
     }
   }, [phase]);
 
-  // 🎵 Audio Fade In
+  // 🎵 audio
   const fadeInAudio = () => {
     let vol = 0;
     const audio = audioRef.current;
@@ -102,13 +104,51 @@ const LoveInvite = () => {
     }, 200);
   };
 
+  // 📸 download letter
+  const downloadLetter = async () => {
+    setSparkle(true);
+
+    setTimeout(async () => {
+      const canvas = await html2canvas(letterRef.current, {
+        scale: 2,
+        backgroundColor: null,
+      });
+
+      const link = document.createElement("a");
+      link.download = "love-letter.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+
+      setSparkle(false);
+    }, 800);
+  };
+
+  // 🖋️ WORD-BY-WORD LETTER WRITING
+  useEffect(() => {
+    if (phase !== "reveal" || !opened) return;
+
+    const words = surpriseMessage.split(" ");
+    let i = 0;
+
+    setTypedLetter("");
+
+    const interval = setInterval(() => {
+      setTypedLetter((prev) => {
+        return prev + (i === 0 ? "" : " ") + words[i];
+      });
+
+      i++;
+      if (i >= words.length) clearInterval(interval);
+    }, 250);
+
+    return () => clearInterval(interval);
+  }, [phase, opened]);
+
   return (
-    <div
-      className={`invite-container ${
-        phase !== "countdown" ? "suspense-mode" : ""
-      }`}
-    >
-      {/* 💖 Floating Hearts */}
+    <div className={`invite-container ${phase !== "countdown" ? "suspense-mode" : ""}`}>
+
+      {sparkle && <div className="sparkle-overlay">✨ Writing memory... 💖</div>}
+
       <div className="hearts">
         {[...Array(20)].map((_, i) => (
           <span key={i}></span>
@@ -116,18 +156,16 @@ const LoveInvite = () => {
       </div>
 
       <div className="invite-card">
-        {/* 🎵 AUDIO */}
+
         <audio ref={audioRef} loop>
           <source src="/ekuro.mp3" type="audio/mpeg" />
         </audio>
 
-        {/* ⏳ COUNTDOWN */}
+        {/* COUNTDOWN */}
         {phase === "countdown" && (
           <>
             <h1 className="title">Hey Jummy ❤️</h1>
-            <p className="subtitle">
-              You're invited to our virtual date
-            </p>
+            <p className="subtitle">You're invited to our virtual date</p>
 
             <div className="countdown">
               <span>{timeLeft.days}d</span>
@@ -144,92 +182,103 @@ const LoveInvite = () => {
           </>
         )}
 
-        {/* 😶 WAIT */}
+        {/* WAIT */}
         {phase === "wait" && (
           <div className="suspense">
             <h1 className="suspense-text">Wait…</h1>
           </div>
         )}
 
-        {/* 💓 TEASE */}
+        {/* TEASE */}
         {phase === "tease" && (
           <div className="suspense">
-            <h1 className="suspense-text">
-              I have something to tell you…
-            </h1>
+            <h1 className="suspense-text">I have something to tell you…</h1>
             <div className="heartbeat"></div>
           </div>
         )}
 
-        {/* ❤️ LETTER PHASE */}
+        {/* LETTER */}
         {phase === "reveal" && (
           <div className="surprise">
+
             {!opened ? (
-              <button
-                className="open-letter"
-                onClick={() => setOpened(true)}
-              >
+              <button className="open-letter" onClick={() => setOpened(true)}>
                 💌 Open My Letter
               </button>
             ) : (
               <div className="letter-view">
-                <h1 className="surprise-title">❤️ For You ❤️</h1>
 
-                <p className="surprise-text">{surpriseMessage}</p>
+                <div ref={letterRef} className="letter-card">
+                  <h1 className="surprise-title">❤️ For You ❤️</h1>
 
-                <button
-                  className="next-btn"
-                  onClick={() => setPhase("gallery")}
-                >
-                  See Our Memories 🎬
-                </button>
+                  <p className="surprise-text ink-writing">
+                    {typedLetter}
+                  </p>
+
+                  <p className="date-stamp">
+                    {new Date().toDateString()}
+                  </p>
+                </div>
+
+                <div className="letter-actions">
+
+                  <button className="next-btn" onClick={() => setPhase("gallery")}>
+                    See Our Memories 🎬
+                  </button>
+
+                  <button className="share-btn" onClick={downloadLetter}>
+                    📸 Download Letter
+                  </button>
+
+                </div>
+
               </div>
             )}
           </div>
         )}
 
-        {/* 🎬 GALLERY PHASE */}
+        {/* GALLERY */}
         {phase === "gallery" && (
           <div className="gallery-screen">
-            <h1 className="gallery-main-title">
-              Our Memories 🎬
-            </h1>
+
+            <h1 className="gallery-main-title">Our Memories 🎬</h1>
 
             <div className="video-gallery">
-              {videos.map((vid, index) => (
-                <div
-                  key={index}
-                  className="video-card"
-                  onClick={() => setSelectedVideo(vid)}
-                >
+              {videos.map((vid, i) => (
+                <div key={i} className="video-card" onClick={() => setSelectedVideo(vid)}>
                   <video src={vid} muted />
                 </div>
               ))}
             </div>
 
-            {/* 💕 JOIN BUTTON */}
-            <a
-              href={dateLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <button className="join-btn big">
-                Join Our Date 💕
-              </button>
+            <a href={dateLink} target="_blank" rel="noopener noreferrer">
+              <button className="join-btn big">Join Our Date 💕</button>
             </a>
+
           </div>
         )}
+
       </div>
 
-      {/* 🎬 VIDEO MODAL */}
       {selectedVideo && (
-        <div
-          className="video-modal"
-          onClick={() => setSelectedVideo(null)}
-        >
-          <video src={selectedVideo} controls autoPlay />
-        </div>
-      )}
+  <div className="video-modal">
+    
+    <div className="video-modal-content">
+
+      <video src={selectedVideo} controls autoPlay />
+
+      <button
+        className="close-video-btn"
+        onClick={() => setSelectedVideo(null)}
+      >
+        ✖ Back to Gallery
+      </button>
+
+    </div>
+
+  </div>
+)}
+
     </div>
   );
 };
