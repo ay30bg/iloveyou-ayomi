@@ -35,7 +35,7 @@ const LoveInvite = () => {
     "I planned something special for us... I can't wait to spend this moment with you ❤️";
 
   const surpriseMessage =
-    "6 - months with you, and my heart is still choosing you every day ❤️ Thank you for being my happiness. I love you endlessly 💕";
+    "6 - months with you, and my heart is still choosing you every day ❤️ Thank you for being my happiness. I love you endlessly Ayomi💕";
 
   // ⏳ countdown
   useEffect(() => {
